@@ -58,12 +58,12 @@ spring:
     #默认使用db2
     database: ${REDIS_DB_NO:1}
 
-  # Mybatis-Plus Config
-  mybatis-plus:
-    # 扫描 mapper.xml
-    mapper-locations: classpath:/mapper/*/*Mapper.xml
-    # 枚举类扫描
-    typeEnumsPackage: com.loeyae.springboot.demo.*.enums
+# Mybatis-Plus Config
+mybatis-plus:
+  # 扫描 mapper.xml
+  mapper-locations: classpath:/mapper/*Mapper.xml
+  # 枚举类扫描
+  typeEnumsPackage: com.loeyae.springboot.demo.*.enums
 
 logging:
     level:
