@@ -34,7 +34,8 @@ node {
         sshagent(["githubssh"]) {
             echo tag
             sh """git $tag"
-                        git push origin $tag """
+                        git push origin $tag
+                      """
         }
     }
 }
