@@ -36,7 +36,7 @@ node {
             sh """
                 git config user.email loeyae@gmail.com
                 git config user.name Zhang Yi
-                git  -a -m "add release tag" $tag
+                git  -a -m 'add release tag' $tag
                 git push origin $tag
                 """
         }
