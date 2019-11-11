@@ -4,6 +4,8 @@
  */
 package com.loeyae.springboot.demo.common;
 
+import com.loeyae.springboot.demo.exception.GlobalException;
+
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -17,6 +19,10 @@ public class ValidateUtil {
 
     private static Validator validator;
 
+    private ValidateUtil() {
+        throw new IllegalStateException("Utility class");
+    }
+
     static {
         validator = Validation.buildDefaultValidatorFactory().getValidator();
     }
@@ -25,26 +31,22 @@ public class ValidateUtil {
      * 校验对象
      * @param object        待校验对象
      * @param groups        待校验的组
-     * @throws WSException  校验不通过，则报RRException异常
+     * @throws Exception    校验不通过，则报RRException异常
      */
-    public static void validateEntity(Object object, Class<?>... groups) throws Exception {
+    public static void validateEntity(Object object, Class<?>... groups) {
         Set<ConstraintViolation<Object>> constraintViolations = validator.validate(object, groups);
-        System.out.println(object);
-        System.out.println(constraintViolations);
         if (!constraintViolations.isEmpty()) {
             StringBuilder msg = new StringBuilder();
             for(ConstraintViolation<Object> constraint:  constraintViolations){
                 msg.append(constraint.getMessage()).append("<br>");
             }
 
-            throw new Exception(msg.toString());
+            throw new GlobalException(msg.toString());
         }
     }
 
-    public static <T> void validateParamter(Class<T> cls, String propertName, Object value, Class<?>... groups) throws Exception {
+    public static <T> void validateParamter(Class<T> cls, String propertName, Object value, Class<?>... groups) {
         Set<ConstraintViolation<T>> constraintViolations = validator.validateValue(cls, propertName, value, groups);
-        System.out.println(value);
-        System.out.println(constraintViolations);
         if (!constraintViolations.isEmpty()) {
             StringBuilder msg = new StringBuilder();
             for(ConstraintViolation<T> constraint:  constraintViolations){
@@ -60,7 +62,7 @@ public class ValidateUtil {
                     .append("<br>");
             }
 
-            throw new Exception(msg.toString());
+            throw new GlobalException(msg.toString());
         }
     }
 }

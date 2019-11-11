@@ -4,7 +4,7 @@
  */
 package com.loeyae.springboot.demo.controller;
 
-import com.baomidou.mybatisplus.annotation.TableField;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.loeyae.springboot.demo.common.QueryWapperUtils;
 import com.loeyae.springboot.demo.common.ValidateUtil;
@@ -13,31 +13,24 @@ import com.loeyae.springboot.demo.entity.JsonDemoVo;
 import com.loeyae.springboot.demo.entity.TestDemoBo;
 import com.loeyae.springboot.demo.validate.groups.SampleValidation;
 import com.loeyae.springboot.demo.validate.groups.TestValidation;
-
-import java.beans.PropertyDescriptor;
-import java.io.File;
-import javax.validation.constraints.*;
-import java.lang.reflect.Array;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.FatalBeanException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  *
@@ -50,36 +43,33 @@ public class IndexController {
     int a = 1;
 
     @ResponseBody
-    @RequestMapping("hello")
+    @GetMapping("hello")
     public String hello() {
         return "Hellow World";
     }
 
-    @RequestMapping("index.htm")
+    @GetMapping("index.htm")
     public String index(ModelMap map) {
         map.addAttribute("hello", "Hellow Thymeleaf!");
         log.error("This is test logging");
         return "index";
     }
 
-    @RequestMapping("valid")
-    public String valid(@RequestParam("id") Integer id) throws Exception {
-        TestDemoBo testDemoBo = new TestDemoBo();
-//        testDemoBo.setId(id);
-//        ValidateUtil.validateEntity(testDemoBo);
+    @GetMapping("valid")
+    public String valid(@RequestParam("id") Integer id) {
         ValidateUtil.validateParamter(TestDemoBo.class, "id", id, TestValidation.class, SampleValidation.class);
         return "index";
     }
 
-    @RequestMapping("form.htm")
+    @GetMapping("form.htm")
     public String form(ModelMap map) {
         map.addAttribute("title", "My form");
         return "form";
     }
 
     @ResponseBody
-    @RequestMapping(value = "/upload", method = {RequestMethod.POST})
-    public JsonDemoVo upload(HttpServletRequest request) throws Exception {
+    @PostMapping(value = "/upload")
+    public JsonDemoVo upload(HttpServletRequest request) throws IOException {
         request.setCharacterEncoding("UTF-8");
 
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
@@ -118,8 +108,7 @@ public class IndexController {
             multipartFile.transferTo(new File(path + File.separator + filename));
 
         }
-        JsonDemoVo jdv = new JsonDemoVo();
-        return jdv;
+        return new JsonDemoVo();
     }
 
     public static void main(String[] args) {
@@ -132,11 +121,11 @@ public class IndexController {
         try {
             Date date = sdf.parse("2019.09.23");
             testDemoBo.setCreateTimeStart(date);
-        } catch (Throwable e) {
+        } catch (RuntimeException | ParseException e) {
             ;
         }
         Class<?> targetClass = Demo.class;
         QueryWrapper queryWrapper = QueryWapperUtils.queryToWrapper(testDemoBo, targetClass);
-        System.out.println(queryWrapper.getSqlSegment());
+        log.error(queryWrapper.getSqlSegment());
     }
 }

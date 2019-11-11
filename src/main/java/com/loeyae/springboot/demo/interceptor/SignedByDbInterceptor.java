@@ -1,7 +1,5 @@
 package com.loeyae.springboot.demo.interceptor;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.loeyae.springboot.demo.common.ApiResult;
 import com.loeyae.springboot.demo.common.MD5Util;
 import com.loeyae.springboot.demo.exception.ApiResultException;
@@ -16,9 +14,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.channels.Channel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -45,11 +40,11 @@ public class SignedByDbInterceptor extends SignedBaseInterceptor implements Hand
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {
         log.warn("signed by db");
         // appid
-        String appId = request.getHeader(str_bys_appId);
+        String appId = request.getHeader(STR_BYS_APP_ID);
         // 请求时时间戳
-        String ts = request.getHeader(str_bys_timestamp);
+        String ts = request.getHeader(STR_BYS_TIMESTAMP);
         // 签名
-        String signStr = request.getHeader(str_bys_signature);
+        String signStr = request.getHeader(STR_BYS_SIGNATURE);
 
         if (StringUtils.isBlank(appId) || StringUtils.isBlank(ts) || StringUtils.isBlank(signStr)) {
             log.warn(VERIFY_FAIL_MSG);

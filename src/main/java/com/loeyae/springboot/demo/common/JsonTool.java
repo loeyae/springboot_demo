@@ -16,6 +16,10 @@ import java.util.Map;
  */
 public class JsonTool {
 
+    private JsonTool() {
+        throw new IllegalStateException("Utility class");
+    }
+
     /**
      * Bean对象转JSON
      *

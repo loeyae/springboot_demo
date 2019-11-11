@@ -1,7 +1,6 @@
 package com.loeyae.springboot.demo.controller;
 
-import com.alibaba.fastjson.JSONObject;
-import com.loeyae.springboot.demo.common.ApiResult;
+
 import com.loeyae.springboot.demo.service.ApiClient;
 import com.loeyae.springboot.demo.service.ApplicationClient;
 import com.loeyae.springboot.demo.service.CategoryClient;
@@ -59,7 +58,7 @@ public class FeignController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/feign/application")
+    @RequestMapping(value = "/feign/application", method = RequestMethod.GET)
     public Object application() {
         return applicationClient.getApplicationByAppId(appId);
     }

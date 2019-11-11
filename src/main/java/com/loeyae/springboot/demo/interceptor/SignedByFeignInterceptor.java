@@ -1,29 +1,18 @@
 package com.loeyae.springboot.demo.interceptor;
 
-import java.io.*;
-
-import com.loeyae.springboot.demo.common.AESUtil;
 import com.loeyae.springboot.demo.common.ApiResult;
 import com.loeyae.springboot.demo.common.MD5Util;
 import com.loeyae.springboot.demo.exception.ApiResultException;
 import com.loeyae.springboot.demo.service.ApiClient;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.bouncycastle.util.encoders.Hex;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.security.Key;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.util.*;
 
 /**
@@ -39,7 +28,7 @@ public class SignedByFeignInterceptor extends SignedBaseInterceptor implements H
 
     public static final String VERIFY_FAIL_MSG = "The request parameter signature verification failed!";
     private static final long TIMEOUT = 15000L;
-    private List<String> signParams = new ArrayList<String>(Arrays.asList(str_bys_appId, str_bys_timestamp));
+    private List<String> signParams = new ArrayList<String>(Arrays.asList(STR_BYS_APP_ID, STR_BYS_TIMESTAMP));
 
     @Autowired
     private ApiClient apiClient;
@@ -49,11 +38,11 @@ public class SignedByFeignInterceptor extends SignedBaseInterceptor implements H
 
         log.warn("signed by feign");
         // appid
-        String appId = request.getHeader(str_bys_appId);
+        String appId = request.getHeader(STR_BYS_APP_ID);
         // 请求时时间戳
-        String ts = request.getHeader(str_bys_timestamp);
+        String ts = request.getHeader(STR_BYS_TIMESTAMP);
         // 签名
-        String signStr = request.getHeader(str_bys_signature);
+        String signStr = request.getHeader(STR_BYS_SIGNATURE);
 
         if (StringUtils.isBlank(appId) || StringUtils.isBlank(ts) || StringUtils.isBlank(signStr)) {
             log.warn(VERIFY_FAIL_MSG);

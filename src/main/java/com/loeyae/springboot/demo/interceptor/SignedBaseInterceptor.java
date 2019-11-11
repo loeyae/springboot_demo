@@ -15,10 +15,10 @@ import java.util.Base64;
 public class SignedBaseInterceptor {
 
 
-    protected static final String str_bys_appId = "bys_appId";
-    protected static final String str_bys_signature = "bys_signature";
-    protected static final String str_bys_secret = "bys_secret";
-    protected static final String str_bys_timestamp = "bys_timestamp";
+    protected static final String STR_BYS_APP_ID = "bys_appId";
+    protected static final String STR_BYS_SIGNATURE = "bys_signature";
+    protected static final String STR_BYS_SECRET = "bys_secret";
+    protected static final String STR_BYS_TIMESTAMP = "bys_timestamp";
 
     protected String getSecretByCache(String appId) {
         String appSecret = null;

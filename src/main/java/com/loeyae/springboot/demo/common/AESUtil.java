@@ -18,6 +18,10 @@ import java.util.Base64;
  */
 public class AESUtil {
 
+    private AESUtil() {
+        throw new IllegalStateException("Utility class");
+    }
+
     /**
      * 加密
      *
@@ -27,7 +31,7 @@ public class AESUtil {
      */
     public static String encrypt(String seed, String source) {
         try {
-            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+            Cipher cipher = Cipher.getInstance("AES/GCM/PKCS5Padding");
             Key key = getKey(seed);
             cipher.init(Cipher.ENCRYPT_MODE, key);
             byte[] result = cipher.doFinal(source.getBytes());
@@ -46,7 +50,7 @@ public class AESUtil {
      */
     public static String decrypt(String seed, String secret) {
         try {
-            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+            Cipher cipher = Cipher.getInstance("AES/GCM/PKCS5Padding");
             Key key = getKey(seed);
             cipher.init(Cipher.DECRYPT_MODE, key);
             byte[] result = cipher.doFinal(Base64.getDecoder().decode(secret));

@@ -19,6 +19,8 @@ import java.util.Optional;
 @Data
 public class ApiResult<T> implements Serializable {
 
+    private static final long serialVersionUID = -8555177481454514055L;
+
     /**
      * 返回码
      */
@@ -32,7 +34,7 @@ public class ApiResult<T> implements Serializable {
     /**
      * 数据
      */
-    private T data;
+    private transient T data;
 
     public ApiResult(IErrorCode errorCode) {
         errorCode = Optional.ofNullable(errorCode).orElse(BaseErrorCode.FAILED);
@@ -50,9 +52,6 @@ public class ApiResult<T> implements Serializable {
 
     public static <T> ApiResult<T> ok(T data) {
         BaseErrorCode aec = BaseErrorCode.SUCCESS;
-//        if (data instanceof Boolean && Boolean.FALSE.equals(data)) {
-//            aec = BaseErrorCode.FAILED;
-//        }
         return restResult(data, aec);
     }
 

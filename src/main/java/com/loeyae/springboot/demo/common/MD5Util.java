@@ -1,5 +1,6 @@
 package com.loeyae.springboot.demo.common;
 
+import com.loeyae.springboot.demo.exception.GlobalException;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,21 +20,26 @@ import java.util.TreeMap;
  * @author: zhangyi07@beyondsoft.com
  */
 public class MD5Util {
-    protected static final String str_bys_secret = "bys_secret";
-    protected static final String str_bys_signature = "bys_signature";
+    protected static final String STR_BYS_SECRET = "bys_secret";
+    protected static final String STR_BYS_SIGNATURE = "bys_signature";
+
+    private MD5Util() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static String md5(String string) {
         byte[] hash;
         try {
             hash = MessageDigest.getInstance("MD5").digest(string.getBytes("UTF-8"));
         } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("UTF-8 is unsupported", e);
+            throw new GlobalException("UTF-8 is unsupported", e);
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("MessageDigest不支持MD5Util", e);
+            throw new GlobalException("MessageDigest不支持MD5Util", e);
         }
         StringBuilder hex = new StringBuilder(hash.length * 2);
         for (byte b : hash) {
             if ((b & 0xFF) < 0x10) { hex.append("0"); };
-            hex.append(Integer.toHexString(b & 0xFF));
+            hex.append(String.format("%02X", b));
         }
         return hex.toString();
     }
@@ -49,7 +55,7 @@ public class MD5Util {
      */
     public static String sign(String appSecret, TreeMap<String, String> params) {
         StringBuilder paramValues = new StringBuilder();
-        params.put(str_bys_secret, appSecret);
+        params.put(STR_BYS_SECRET, appSecret);
 
         for (Map.Entry<String, String> entry : params.entrySet()) {
             paramValues.append(entry.getValue());
@@ -68,12 +74,12 @@ public class MD5Util {
      * @throws Exception
      */
     public static boolean verifySign(String appSecret, HttpServletRequest request,
-                                     List<String> signParams) throws Exception {
+                                     List<String> signParams) throws UnsupportedEncodingException {
         TreeMap<String, String> params = new TreeMap<String, String>();
 
-        String signStr = request.getHeader(str_bys_signature);
+        String signStr = request.getHeader(STR_BYS_SIGNATURE);
         if(StringUtils.isBlank(signStr)){
-            throw new RuntimeException("There is no signature field in the request parameter!");
+            throw new GlobalException("There is no signature field in the request parameter!");
         }
 
         for (String paramName:signParams) {
