@@ -33,6 +33,6 @@ node {
         def tag = "release-${params.RELEASE_TAG}.$BUILD_NUMBER"
         echo tag
         sh "git tag "+ tag
-        sh "git push "+ tag
+        sh "git push origin "+ tag
     }
 }
