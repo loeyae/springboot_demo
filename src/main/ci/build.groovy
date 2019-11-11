@@ -32,7 +32,6 @@ node {
     stage("tag") {
         def tag = "release-${params.RELEASE_TAG}.$BUILD_NUMBER"
         sshagent(["github-ssh"]) {
-            echo "$BUILD_USER"
             sh """
                 git config user.email 'loeyae@gmail.com'
                 git config user.name 'ZhangYi'
