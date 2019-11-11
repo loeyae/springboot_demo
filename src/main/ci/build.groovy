@@ -35,7 +35,7 @@ node {
             echo "$tag"
             sh """
                 git config user.email ${env.BUILD_USER_EMAIL}
-                git config user.name ${env.BUILD_USER_ID}
+                git config user.name ${env.BUILD_USER}
                 git tag -a -m 'add release tag' $tag
                 git push origin $tag
                 """
