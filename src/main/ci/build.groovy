@@ -4,7 +4,7 @@ node {
                 [
                         $class                           : 'GitSCM',
                         branches                         : [[name: '*/master']],
-                        browser                          : [$class: 'GithubWeb', repoUrl: 'https://github.com/loeyae/springboot_demo'],
+                        browser                          : [$class: 'GithubWeb', repoUrl: 'git@github.com:loeyae/springboot_demo.git'],
                         doGenerateSubmoduleConfigurations: false,
                         extensions                       : [],
                         submoduleCfg                     : [],
@@ -34,8 +34,8 @@ node {
         sshagent(["github-ssh"]) {
             echo "$tag"
             sh """
-                git config user.email ${env.BUILD_USER_EMAIL}
-                git config user.name ${env.BUILD_USER}
+                git config user.email 'loeyae@gmail.com'
+                git config user.name 'Zhang Yi'
                 git tag -a -m 'add release tag' $tag
                 git push origin $tag
                 """
