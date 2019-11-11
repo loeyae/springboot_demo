@@ -27,4 +27,10 @@ node {
             waitForQualityGate abortPipeline: true
         }
     }
+    stage("tag") {
+        def tag = "release-${params.RELEASE_TAG}.$BUILD_NUMBER"
+        echo tag
+        sh "git tag "+ tag
+        sh "git push "+ tag
+    }
 }

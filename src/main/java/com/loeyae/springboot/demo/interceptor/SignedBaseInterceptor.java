@@ -26,7 +26,11 @@ public class SignedBaseInterceptor {
         if (file.exists()) {
             try {
                 BufferedReader bufferedReader = new BufferedReader(new FileReader(file.getPath()));
-                appSecret = bufferedReader.readLine();
+                try {
+                    appSecret = bufferedReader.readLine();
+                } finally {
+                    bufferedReader.close();
+                }
                 return AESUtil.decrypt(appId, appSecret);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -43,8 +47,11 @@ public class SignedBaseInterceptor {
                 file.createNewFile();
             }
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file.getPath()));
-            bufferedWriter.write(encryptString);
-            bufferedWriter.close();
+            try {
+                bufferedWriter.write(encryptString);
+            } finally {
+                bufferedWriter.close();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
