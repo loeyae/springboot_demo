@@ -33,10 +33,12 @@ node {
         def tag = "release-${params.RELEASE_TAG}.$BUILD_NUMBER"
         sshagent(["githubssh"]) {
             echo "$tag"
-            sh "git config user.email=loeyae@gmail.com"
-            sh "git config user.name=Zhang Yi"
-            sh "git  -a -m 'add release tag' $tag"
-            sh "git push origin $tag"
+            sh """
+                git config user.email loeyae@gmail.com
+                git config user.name Zhang Yi
+                git  -a -m "add release tag" $tag
+                git push origin $tag
+                """
         }
     }
 }
