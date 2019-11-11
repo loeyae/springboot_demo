@@ -8,7 +8,7 @@ node {
                         doGenerateSubmoduleConfigurations: false,
                         extensions                       : [],
                         submoduleCfg                     : [],
-                        userRemoteConfigs                : [[credentialsId: 'github', url: 'https://github.com/loeyae/springboot_demo']]
+                        userRemoteConfigs                : [[credentialsId: 'github-ssh', url: 'https://github.com/loeyae/springboot_demo']]
                 ]
         )
     }
