@@ -12,13 +12,13 @@ node {
                 ]
         )
     }
-    stage("code analysis") {
-        withSonarQubeEnv('Sonarqube') {
-            //固定使用项目根目录${basedir}下的pom.xml进行代码检查
-            sh "mvn -f pom.xml clean compile sonar:sonar "
-        }
-    }
-    stage("unit test") {
+//    stage("code analysis") {
+//        withSonarQubeEnv('Sonarqube') {
+//            //固定使用项目根目录${basedir}下的pom.xml进行代码检查
+//            sh "mvn -f pom.xml clean compile sonar:sonar "
+//        }
+//    }
+    stage("analysis & unit test") {
         withSonarQubeEnv("Sonarqube") {
             sh "mvn org.jacoco:jacoco-maven-plugin:prepare-agent -f pom.xml clean test -Dautoconfig" +
                     ".skip=true -Dmaven.test.skip=false -Dmaven.test.failure.ignore=true sonar:sonar"
