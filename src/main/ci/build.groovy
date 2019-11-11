@@ -4,11 +4,11 @@ node {
                 [
                         $class                           : 'GitSCM',
                         branches                         : [[name: '*/master']],
-                        browser                          : [$class: 'GithubWeb', repoUrl: 'git@github.com:loeyae/springboot_demo.git'],
+                        browser                          : [$class: 'GithubWeb', repoUrl: 'https://github.com/loeyae/springboot_demo'],
                         doGenerateSubmoduleConfigurations: false,
                         extensions                       : [],
                         submoduleCfg                     : [],
-                        userRemoteConfigs                : [[credentialsId: 'github-ssh', url: 'https://github.com/loeyae/springboot_demo']]
+                        userRemoteConfigs                : [[credentialsId: 'github-ssh', url: 'git@github.com:loeyae/springboot_demo.git']]
                 ]
         )
     }
