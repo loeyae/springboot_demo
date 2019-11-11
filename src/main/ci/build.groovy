@@ -31,11 +31,11 @@ node {
     }
     stage("tag") {
         def tag = "release-${params.RELEASE_TAG}.$BUILD_NUMBER"
-        sshagent(["githubssh"]) {
+        sshagent(["github-ssh"]) {
             echo "$tag"
             sh """
-                git config user.email loeyae@gmail.com
-                git config user.name Zhang Yi
+                git config user.email ${env.BUILD_USER_EMAIL}
+                git config user.name ${env.BUILD_USER_ID}
                 git tag -a -m 'add release tag' $tag
                 git push origin $tag
                 """
