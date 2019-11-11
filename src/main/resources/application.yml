@@ -69,4 +69,4 @@ logging:
     level:
       web: WARN
       root: WARN
-    path: E:\log
+    path: /var/log
