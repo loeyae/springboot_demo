@@ -31,8 +31,10 @@ node {
     }
     stage("tag") {
         def tag = "release-${params.RELEASE_TAG}.$BUILD_NUMBER"
-        echo tag
-        sh "git tag "+ tag
-        sh "git push origin "+ tag
+        sshagent(["github"]) {
+            echo tag
+            sh """git $tag"
+                        git push origin $tag """
+        }
     }
 }
