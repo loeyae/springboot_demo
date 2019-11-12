@@ -23,7 +23,13 @@ node {
             sh "mvn org.jacoco:jacoco-maven-plugin:prepare-agent -f pom.xml clean test -Dautoconfig" +
                     ".skip=true -Dmaven.test.skip=false -Dmaven.test.failure.ignore=true sonar:sonar"
             junit '**/target/surefire-reports/*.xml'
-            jacoco buildOverBuild: true, changeBuildStatus: true, deltaInstructionCoverage: '60', maximumInstructionCoverage: '90', minimumInstructionCoverage: '70'
+            jacoco([
+                    buildOverBuild: true,
+                    changeBuildStatus: true,
+                    deltaInstructionCoverage: '60',
+                    maximumInstructionCoverage: '90',
+                    minimumInstructionCoverage: '70'
+                ])
         }
         timeout(1) {
             waitForQualityGate abortPipeline: true
