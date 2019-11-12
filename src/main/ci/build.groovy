@@ -1,5 +1,5 @@
 node {
-    stage("checkout") {
+    stage("Checkout") {
         checkout(
                 [
                         $class                           : 'GitSCM',
@@ -18,7 +18,7 @@ node {
 //            sh "mvn -f pom.xml clean compile sonar:sonar "
 //        }
 //    }
-    stage("analysis & unit test") {
+    stage("Analysis & Unit test") {
         withSonarQubeEnv("Sonarqube") {
             sh "mvn org.jacoco:jacoco-maven-plugin:prepare-agent -f pom.xml clean test -Dautoconfig" +
                     ".skip=true -Dmaven.test.skip=false -Dmaven.test.failure.ignore=true sonar:sonar"
@@ -35,15 +35,29 @@ node {
             waitForQualityGate abortPipeline: true
         }
     }
-    stage("tag") {
-        def tag = "release-${params.RELEASE_TAG}.$BUILD_NUMBER"
-        sshagent(["github-ssh"]) {
-            sh """
+    stage("Tag") {
+        try {
+            def tag = "release-${params.RELEASE_TAG}.$BUILD_NUMBER"
+            sshagent(["github-ssh"]) {
+                sh """
                 git config user.email 'loeyae@gmail.com'
                 git config user.name 'ZhangYi'
                 git tag -a -m 'add release tag' $tag
                 git push origin $tag
                 """
+            }
+        }
+        catch (exc){
+            print(exc.getMessage())
+            currentBuild.result = 'FAILURE'
+        }
+    }
+    stage("Package") {
+        if (currentBuild.result != 'FAILURE') {
+            sh "mvn -f pom.xml clean package -Dautoconfig.skip=true -Dmaven.test.skip=true"
+
+        } else {
+            echo "Task FAILURE, Skip package"
         }
     }
 }
