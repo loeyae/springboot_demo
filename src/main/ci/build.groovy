@@ -65,7 +65,7 @@ node {
     stage("Image push") {
         if (currentBuild.result != 'FAILURE') {
             try {
-                def imageTag = ${env.BUILD_NUMBER}
+                def imageTag = env.BUILD_NUMBER
                 sh """
                           docker tag springboot_demo:latest loeyae/springboot_demo:$imageTag
                           docker push loeyae/springboot_demo:$imageTag
