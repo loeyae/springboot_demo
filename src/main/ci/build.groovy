@@ -37,7 +37,7 @@ node {
     }
     stage("Tag") {
         try {
-            def tag = "release-${params.RELEASE_TAG}.$BUILD_NUMBER"
+            def tag = "release-${params.RELEASE_TAG}.${env.BUILD_NUMBER}"
             sshagent(["github-ssh"]) {
                 sh """
                 git config user.email 'loeyae@gmail.com'
@@ -48,6 +48,7 @@ node {
             }
         }
         catch (exc){
+            println("Tag failure")
             print(exc.getMessage())
             currentBuild.result = 'FAILURE'
         }
@@ -59,6 +60,24 @@ node {
 
         } else {
             echo "Task FAILURE, Skip package"
+        }
+    }
+    stage("Image push") {
+        if (currentBuild.result != 'FAILURE') {
+            try {
+                def imageTag = ${env.BUILD_NUMBER}
+                sh """
+                          docker tag springboot_demo:latest loeyae/springboot_demo:$imageTag
+                          docker push loeyae/springboot_demo:$imageTag
+                          """
+            }
+            catch (exc) {
+                println("Push image failure")
+                print(exc.getMessage())
+                currentBuild.result = 'FAILURE'
+            }
+        } else {
+            echo "Task FAILURE, Skip image push"
         }
     }
 }
