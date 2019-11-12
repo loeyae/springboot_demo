@@ -53,6 +53,7 @@ node {
         }
     }
     stage("Package") {
+        println("current build result ${currentBuild.result}")
         if (currentBuild.result != 'FAILURE') {
             sh "mvn -f pom.xml clean package -Dautoconfig.skip=true -Dmaven.test.skip=true"
 
