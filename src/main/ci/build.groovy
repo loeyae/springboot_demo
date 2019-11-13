@@ -65,17 +65,24 @@ node {
     stage("Image push") {
         if (currentBuild.result != 'FAILURE') {
             try {
-                def imageTag = env.BUILD_NUMBER
+                def imageTag = "loeyae/springboot_demo:${env.BUILD_NUMBER}"
+                def latestTag = "loeyae/springboot_demo:latest"
                 sh """
-                          docker tag springboot_demo:latest loeyae/springboot_demo:$imageTag
-                          docker push loeyae/springboot_demo:$imageTag
-                          """
+                  docker tag springboot_demo:latest $imageTag
+                  docker tag springboot_demo:latest $latestTag
+                  docker push $imageTag
+                  docker push $latestTag
+                  """
             }
             catch (exc) {
                 println("Push image failure")
                 print(exc.getMessage())
                 currentBuild.result = 'FAILURE'
             }
+            sh """
+                docker rmi $imageTag
+                docker rmi \$(docker images | grep "^<none>" | awk "{print \$3}")
+                """
         } else {
             echo "Task FAILURE, Skip image push"
         }
