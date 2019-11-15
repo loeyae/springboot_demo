@@ -14,6 +14,7 @@ import com.loeyae.springboot.demo.entity.TestDemoBo;
 import com.loeyae.springboot.demo.validate.groups.SampleValidation;
 import com.loeyae.springboot.demo.validate.groups.TestValidation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,10 +43,13 @@ public class IndexController {
 
     int a = 1;
 
+    @Value(value = "${app.dest}")
+    private String dest;
+
     @ResponseBody
     @GetMapping("hello")
     public String hello() {
-        return "Hellow World";
+        return String.format("Hellow World.%s", dest);
     }
 
     @GetMapping("index.htm")
@@ -122,7 +126,7 @@ public class IndexController {
             Date date = sdf.parse("2019.09.23");
             testDemoBo.setCreateTimeStart(date);
         } catch (RuntimeException | ParseException e) {
-            ;
+            log.error(e.getMessage(), e);
         }
         Class<?> targetClass = Demo.class;
         QueryWrapper queryWrapper = QueryWapperUtils.queryToWrapper(testDemoBo, targetClass);
