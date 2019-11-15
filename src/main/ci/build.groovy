@@ -63,10 +63,10 @@ node {
         }
     }
     stage("Image push") {
+        def imageTag = "loeyae/springboot_demo:${env.BUILD_NUMBER}"
+        def latestTag = "loeyae/springboot_demo:latest"
         if (currentBuild.result != 'FAILURE') {
             try {
-                def imageTag = "loeyae/springboot_demo:${env.BUILD_NUMBER}"
-                def latestTag = "loeyae/springboot_demo:latest"
                 sh """
                   docker tag springboot_demo:latest $imageTag
                   docker tag springboot_demo:latest $latestTag
