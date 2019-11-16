@@ -89,6 +89,7 @@ node {
             }
             sh """
                 docker rmi $imageTag
+                docker rmi $latestTag
                 """
         } else {
             echo "Task FAILURE, Skip image push"
