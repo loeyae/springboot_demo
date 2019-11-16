@@ -31,8 +31,8 @@ node {
             jacoco([
                     buildOverBuild: true,
                     changeBuildStatus: true,
-                    deltaInstructionCoverage: '60',   //低于60%覆盖率时，任务状态为unstable
-                    maximumInstructionCoverage: '90', //高于90%覆盖率时，任务状态为stable
+                    deltaInstructionCoverage: '11',   //低于60%覆盖率时，任务状态为unstable
+                    maximumInstructionCoverage: '12', //高于90%覆盖率时，任务状态为stable
                     minimumInstructionCoverage: '10'  //低于10%覆盖率时，任务状态为failure
                 ])
         }
