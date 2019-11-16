@@ -22,6 +22,7 @@ node {
         withSonarQubeEnv("Sonarqube") {
 //            sh "mvn org.jacoco:jacoco-maven-plugin:prepare-agent -f pom.xml clean test -Dautoconfig" +
 //                    ".skip=true -Dmaven.test.skip=false -Dmaven.test.failure.ignore=true sonar:sonar"
+            //配置jacoco到pom.xml
             sh "mvn -f pom.xml clean test -Dautoconfig.skip=true -Dmaven.test.failure.ignore=true sonar:sonar"
             junit '**/target/surefire-reports/*.xml'
             //整合覆盖率到jenkins
