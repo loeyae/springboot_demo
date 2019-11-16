@@ -1,4 +1,8 @@
 node {
+    def PACKAGE_BY_STABLE = params.PACKAGE_BY_STABLE ? $params.PACKAGE_BY_STABLE : false
+    def deltaInstructionCoverage = params.deltaInstructionCoverage ? params.deltaInstructionCoverage : '60'
+    def maximumInstructionCoverage = params.maximumInstructionCoverage ? params.maximumInstructionCoverage : '90'
+    def minimumInstructionCoverage = params.minimumInstructionCoverage ? params.minimumInstructionCoverage : '30'
     stage("Checkout") {
         checkout(
                 [
@@ -34,9 +38,9 @@ node {
             jacoco([
                     buildOverBuild: true,
                     changeBuildStatus: true,
-                    deltaInstructionCoverage: '11',   //低于60%覆盖率时，任务状态为unstable
-                    maximumInstructionCoverage: '12', //高于90%覆盖率时，任务状态为stable
-                    minimumInstructionCoverage: '10'  //低于10%覆盖率时，任务状态为failure
+                    deltaInstructionCoverage: deltaInstructionCoverage,   //低于该覆盖率时，任务状态为unstable
+                    maximumInstructionCoverage: maximumInstructionCoverage, //高于该覆盖率时，任务状态为stable
+                    minimumInstructionCoverage: minimumInstructionCoverage  //低于该覆盖率时，任务状态为failure
                 ])
         }
         timeout(1) {
@@ -63,7 +67,8 @@ node {
     }
     stage("Package") {
         println("current build result ${currentBuild.result}")
-        if (currentBuild.result != 'FAILURE') {
+        if ((PACKAGE_BY_STABLE && currentBuild.resultIsBetterOrEqualTo("SUCCESS")) ||
+                (!PACKAGE_BY_STABLE && currentBuild.resultIsBetterOrEqualTo("UNSTABLE"))) {
             sh "mvn -f pom.xml clean package -Dautoconfig.skip=true -Dmaven.test.skip=true"
 
         } else {
@@ -73,7 +78,8 @@ node {
     stage("Image push") {
         def imageTag = "loeyae/springboot_demo:${env.BUILD_NUMBER}"
         def latestTag = "loeyae/springboot_demo:latest"
-        if (currentBuild.result != 'FAILURE') {
+        if ((PACKAGE_BY_STABLE && currentBuild.resultIsBetterOrEqualTo("SUCCESS")) ||
+                (!PACKAGE_BY_STABLE && currentBuild.resultIsBetterOrEqualTo("UNSTABLE"))) {
             try {
                 sh """
                   docker tag springboot_demo:latest $imageTag
