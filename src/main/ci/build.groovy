@@ -48,25 +48,29 @@ node {
         }
     }
     stage("Tag") {
-        try {
-            def tag = "release-${params.RELEASE_TAG}.${env.BUILD_NUMBER}"
-            sshagent(["github-ssh"]) {
-                sh """
+        if ((PACKAGE_BY_STABLE && currentBuild.resultIsBetterOrEqualTo("SUCCESS")) ||
+                (!PACKAGE_BY_STABLE && currentBuild.resultIsBetterOrEqualTo("UNSTABLE"))) {
+            try {
+                def tag = "release-${params.RELEASE_TAG}.${env.BUILD_NUMBER}"
+                sshagent(["github-ssh"]) {
+                    sh """
                 git config user.email 'loeyae@gmail.com'
                 git config user.name 'ZhangYi'
                 git tag -a -m 'add release tag' $tag
                 git push origin $tag
                 """
+                }
             }
-        }
-        catch (exc){
-            println("Tag failure")
-            print(exc.getMessage())
-            currentBuild.result = 'FAILURE'
+            catch (exc) {
+                println("Tag failure")
+                print(exc.getMessage())
+                currentBuild.result = 'FAILURE'
+            }
+        } else {
+            echo "Task FAILURE, Skip tag"
         }
     }
     stage("Package") {
-        println("current build result ${currentBuild.result}")
         if ((PACKAGE_BY_STABLE && currentBuild.resultIsBetterOrEqualTo("SUCCESS")) ||
                 (!PACKAGE_BY_STABLE && currentBuild.resultIsBetterOrEqualTo("UNSTABLE"))) {
             sh "mvn -f pom.xml clean package -Dautoconfig.skip=true -Dmaven.test.skip=true"
