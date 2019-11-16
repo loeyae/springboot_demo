@@ -1,5 +1,5 @@
 node {
-    def PACKAGE_BY_STABLE = params.PACKAGE_BY_STABLE ? $params.PACKAGE_BY_STABLE : false
+    def PACKAGE_BY_STABLE = params.PACKAGE_BY_STABLE ? params.PACKAGE_BY_STABLE : false
     def deltaInstructionCoverage = params.deltaInstructionCoverage ? params.deltaInstructionCoverage : '60'
     def maximumInstructionCoverage = params.maximumInstructionCoverage ? params.maximumInstructionCoverage : '90'
     def minimumInstructionCoverage = params.minimumInstructionCoverage ? params.minimumInstructionCoverage : '30'
