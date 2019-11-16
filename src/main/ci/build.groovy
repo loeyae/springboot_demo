@@ -24,8 +24,10 @@ node {
 //                    ".skip=true -Dmaven.test.skip=false -Dmaven.test.failure.ignore=true sonar:sonar"
             sh "mvn -f pom.xml clean test -Dautoconfig.skip=true -Dmaven.test.failure.ignore=true sonar:sonar"
             junit '**/target/surefire-reports/*.xml'
-            publishCoverage adapters: [jacocoAdapter('**/target/jacoco-ut/*.xml')], sourceFileResolver: sourceFiles
-            ('NEVER_STORE')
+            publishCoverage ([
+                    adapters: [jacocoAdapter('**/target/jacoco-ut/*.xml')],
+                    sourceFileResolver: sourceFiles('NEVER_STORE')
+            ])
             jacoco([
                     buildOverBuild: true,
                     changeBuildStatus: true,
