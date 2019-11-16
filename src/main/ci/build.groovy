@@ -20,8 +20,9 @@ node {
 //    }
     stage("Analysis & Unit test") {
         withSonarQubeEnv("Sonarqube") {
-            sh "mvn org.jacoco:jacoco-maven-plugin:prepare-agent -f pom.xml clean test -Dautoconfig" +
-                    ".skip=true -Dmaven.test.skip=false -Dmaven.test.failure.ignore=true sonar:sonar"
+//            sh "mvn org.jacoco:jacoco-maven-plugin:prepare-agent -f pom.xml clean test -Dautoconfig" +
+//                    ".skip=true -Dmaven.test.skip=false -Dmaven.test.failure.ignore=true sonar:sonar"
+            sh "mvn -f pom.xml clean test -Dautoconfig.skip=true -Dmaven.test.failure.ignore=true sonar:sonar"
             junit '**/target/surefire-reports/*.xml'
             jacoco([
                     buildOverBuild: true,
