@@ -24,10 +24,12 @@ node {
 //                    ".skip=true -Dmaven.test.skip=false -Dmaven.test.failure.ignore=true sonar:sonar"
             sh "mvn -f pom.xml clean test -Dautoconfig.skip=true -Dmaven.test.failure.ignore=true sonar:sonar"
             junit '**/target/surefire-reports/*.xml'
+            //整合覆盖率到jenkins
             publishCoverage ([
                     adapters: [jacocoAdapter('**/target/jacoco-ut/*.xml')],
                     sourceFileResolver: sourceFiles('NEVER_STORE')
             ])
+            //单元测死覆盖率控制任务晴雨表
             jacoco([
                     buildOverBuild: true,
                     changeBuildStatus: true,
