@@ -2,12 +2,15 @@ package com.loeyae.springboot.demo.common;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.FatalBeanException;
 import org.springframework.util.StringUtils;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Date;
@@ -20,6 +23,16 @@ import java.util.Date;
  * @author: zhangyi07@beyondsoft.com
  */
 public class QueryWapperUtils {
+
+    private static Logger logger;
+
+    private QueryWapperUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    static {
+        logger = LoggerFactory.getLogger(QueryWapperUtils.class);
+    }
 
     public static QueryWrapper queryToWrapper(Object source, Class targetClass) {
         Class<?> actualEditable = source.getClass();
@@ -35,7 +48,7 @@ public class QueryWapperUtils {
 
                     Object value = readMethod.invoke(source);
                     if (value == null) {
-                        System.out.println("value is null");
+                        logger.debug("value is null");
                         continue;
                     }
                     Class type = sourcePd.getPropertyType();
@@ -81,7 +94,7 @@ public class QueryWapperUtils {
                                 clazz = null;
                                 break;
                             }
-                        } catch (Throwable e) {
+                        } catch (RuntimeException e) {
                             column = nProperty;
                             break;
                         }
@@ -91,9 +104,11 @@ public class QueryWapperUtils {
                     }
                     Method method = QueryWrapper.class.getMethod(m, Object.class, Object.class);
                     method.invoke(queryWrapper, new Object[]{column, value});
-                } catch (Throwable exc) {
+                } catch (IllegalAccessException | NoSuchMethodException exc) {
                     throw new FatalBeanException("Could not copy properties from source to " +
                             "target", exc);
+                } catch (InvocationTargetException e) {
+                    logger.error(e.getMessage(), e);
                 }
             }
         }

@@ -6,10 +6,12 @@ import org.apache.commons.lang3.StringUtils;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedMap;
 import java.util.TreeMap;
 
 /**
@@ -30,15 +32,13 @@ public class MD5Util {
     public static String md5(String string) {
         byte[] hash;
         try {
-            hash = MessageDigest.getInstance("MD5").digest(string.getBytes("UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            throw new GlobalException("UTF-8 is unsupported", e);
+            hash = MessageDigest.getInstance("MD5").digest(string.getBytes(StandardCharsets.UTF_8));
         } catch (NoSuchAlgorithmException e) {
             throw new GlobalException("MessageDigest不支持MD5Util", e);
         }
         StringBuilder hex = new StringBuilder(hash.length * 2);
         for (byte b : hash) {
-            if ((b & 0xFF) < 0x10) { hex.append("0"); };
+            if ((b & 0xFF) < 0x10) { hex.append("0"); }
             hex.append(String.format("%02X", b));
         }
         return hex.toString();
@@ -53,7 +53,7 @@ public class MD5Util {
      * @param params
      * @return
      */
-    public static String sign(String appSecret, TreeMap<String, String> params) {
+    public static String sign(String appSecret, SortedMap<String, String> params) {
         StringBuilder paramValues = new StringBuilder();
         params.put(STR_BYS_SECRET, appSecret);
 
@@ -75,7 +75,7 @@ public class MD5Util {
      */
     public static boolean verifySign(String appSecret, HttpServletRequest request,
                                      List<String> signParams) throws UnsupportedEncodingException {
-        TreeMap<String, String> params = new TreeMap<String, String>();
+        TreeMap<String, String> params = new TreeMap<>();
 
         String signStr = request.getHeader(STR_BYS_SIGNATURE);
         if(StringUtils.isBlank(signStr)){
@@ -86,14 +86,11 @@ public class MD5Util {
             params.put(paramName, URLDecoder.decode(request.getHeader(paramName), "UTF-8"));
         }
 
-        if (!sign(appSecret, params).equals(signStr)) {
-            return false;
-        }
-        return true;
+       return sign(appSecret, params).equals(signStr);
     }
 
     public static void main(String[] args) {
-        TreeMap<String, String> params = new TreeMap<String, String>();
+        TreeMap<String, String> params = new TreeMap<>();
         params.put("appId", "1111");
         params.put("ts","134511551");
         sign("aaaa", params);

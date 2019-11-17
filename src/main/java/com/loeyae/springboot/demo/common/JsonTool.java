@@ -63,7 +63,7 @@ public class JsonTool {
         if (StringUtils.isEmpty(key) || StringUtils.isEmpty(value)) {
             return null;
         }
-        Map<String, String> map = new HashMap<String, String>(16);
+        Map<String, String> map = new HashMap<>(16);
         map.put(key, value);
         return beanToJson(map, null);
     }

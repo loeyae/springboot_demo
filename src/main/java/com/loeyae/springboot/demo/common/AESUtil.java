@@ -1,5 +1,9 @@
 package com.loeyae.springboot.demo.common;
 
+import groovy.util.logging.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
@@ -16,10 +20,17 @@ import java.util.Base64;
  * @version: 1.0
  * @author: zhangyi07@beyondsoft.com
  */
+@Slf4j
 public class AESUtil {
 
     private AESUtil() {
         throw new IllegalStateException("Utility class");
+    }
+
+    private static Logger logger;
+
+    static {
+        logger = LoggerFactory.getLogger(AESUtil.class);
     }
 
     /**
@@ -37,7 +48,7 @@ public class AESUtil {
             byte[] result = cipher.doFinal(source.getBytes());
             return Base64.getEncoder().encodeToString(result);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
         return null;
     }
@@ -56,7 +67,7 @@ public class AESUtil {
             byte[] result = cipher.doFinal(Base64.getDecoder().decode(secret));
             return new String(result,"utf-8");
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
         return null;
     }
@@ -76,7 +87,6 @@ public class AESUtil {
         SecretKey secretKey = keyGenerator.generateKey();
         // 获取密钥
         byte[] keyBytes = secretKey.getEncoded();
-        Key key = new SecretKeySpec(keyBytes, "AES");
-        return key;
+        return new SecretKeySpec(keyBytes, "AES");
     }
 }
