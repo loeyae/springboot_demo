@@ -1,0 +1,58 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: my-demo
+
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: my-demo-dev-config
+  namespace: my-demo
+  labels:
+    my-config: dev
+data:
+  app.dest: "这是开发环境的配置"
+
+---
+
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: s8t-demo
+  namespace: my-demo
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: my-s8t-demo
+    spec:
+      containers:
+        - name: s8t-demo
+          image: loeyae/springboot_demo:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8081
+              protocol: TCP
+          env:
+            - name: APP_DEST
+              valueFrom:
+                configMapKeyRef:
+                  name: my-demo-dev-config
+                  key: app.dest
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: s8t-demo
+  namespace: my-demo
+spec:
+  type: NodePort
+  ports:
+    - port: 8081
+      nodePort: 30881
+  selector:
+    app: my-s8t-demo
+
