@@ -1,4 +1,12 @@
 node {
+    properties([
+            parameters([
+                    string(defaultValue: '60', description: '单元测试覆盖率及格线', name: 'deltaInstructionCoverage', trim: false),
+                    string(defaultValue: '90', description: '单元测试覆盖率stable line', name: 'maximumInstructionCoverage', trim: false),
+                    string(defaultValue: '30', description: '单元测试覆盖率底线', name: 'minimumInstructionCoverage', trim: false),
+                    booleanParam(defaultValue: true, description: '是否必须stable才打包', name: 'PACKAGE_BY_STABLE')
+            ])
+    ])
     def PACKAGE_BY_STABLE = params.PACKAGE_BY_STABLE ? params.PACKAGE_BY_STABLE : false
     def deltaInstructionCoverage = params.deltaInstructionCoverage ? params.deltaInstructionCoverage : '60'
     def maximumInstructionCoverage = params.maximumInstructionCoverage ? params.maximumInstructionCoverage : '90'
