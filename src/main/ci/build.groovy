@@ -1,4 +1,4 @@
-node {
+node("build") {
     properties([
             parameters([
                     string(defaultValue: '60', description: '单元测试覆盖率及格线', name: 'deltaInstructionCoverage', trim: false),
