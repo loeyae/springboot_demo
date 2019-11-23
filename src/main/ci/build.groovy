@@ -82,7 +82,9 @@ node {
     stage("Package") {
         if ((PACKAGE_BY_STABLE && currentBuild.resultIsBetterOrEqualTo("SUCCESS")) ||
                 (!PACKAGE_BY_STABLE && currentBuild.resultIsBetterOrEqualTo("UNSTABLE"))) {
-            sh "mvn -f pom.xml clean package -Dautoconfig.skip=true -Dmaven.test.skip=true"
+            withCredentials([dockerCert(credentialsId: 'docker-local', variable: 'DOCKER_CERT_PATH')]) {
+                sh "mvn -f pom.xml clean package -Dautoconfig.skip=true -Dmaven.test.skip=true"
+            }
 
         } else {
             echo "Task FAILURE, Skip package"
@@ -93,23 +95,25 @@ node {
         def latestTag = "loeyae/springboot_demo:latest"
         if ((PACKAGE_BY_STABLE && currentBuild.resultIsBetterOrEqualTo("SUCCESS")) ||
                 (!PACKAGE_BY_STABLE && currentBuild.resultIsBetterOrEqualTo("UNSTABLE"))) {
-            try {
-                sh """
+            withCredentials([dockerCert(credentialsId: 'docker-local', variable: 'DOCKER_CERT_PATH')]) {
+                try {
+                    sh """
                   docker tag springboot_demo:latest $imageTag
                   docker tag springboot_demo:latest $latestTag
                   docker push $imageTag
                   docker push $latestTag
                   """
-            }
-            catch (exc) {
-                println("Push image failure")
-                print(exc.getMessage())
-                currentBuild.result = 'FAILURE'
-            }
-            sh """
+                }
+                catch (exc) {
+                    println("Push image failure")
+                    print(exc.getMessage())
+                    currentBuild.result = 'FAILURE'
+                }
+                sh """
                 docker rmi $imageTag
                 docker rmi $latestTag
                 """
+            }
         } else {
             echo "Task FAILURE, Skip image push"
         }
