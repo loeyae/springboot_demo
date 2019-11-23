@@ -21,6 +21,8 @@ apiVersion: apps/v1
 metadata:
   name: s8t-demo
   namespace: my-demo
+  labels:
+    app: my-s8t-demo
 spec:
   replicas: 1
   template:
@@ -53,6 +55,4 @@ spec:
   ports:
     - port: 8081
       nodePort: 30881
-  selector:
-    app: my-s8t-demo
 
