@@ -1,4 +1,4 @@
-node("deploy") {
+node {
     properties([
             parameters([
                     string(defaultValue: 'dev', description: '部署环境标志', name: 'ENV_LABEL', trim:
