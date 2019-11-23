@@ -25,6 +25,9 @@ metadata:
     app: my-s8t-demo
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: my-s8t-demo
   template:
     metadata:
       labels:
@@ -55,4 +58,5 @@ spec:
   ports:
     - port: 8081
       nodePort: 30881
-
+  selector:
+    app: my-s8t-demo
