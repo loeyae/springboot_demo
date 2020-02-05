@@ -4,30 +4,26 @@ import com.alibaba.fastjson.JSONObject;
 import com.loeyae.springboot.demo.common.ApiResult;
 import com.loeyae.springboot.demo.service.ApiClient;
 import com.loeyae.springboot.demo.service.AppService;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mybatis.spring.boot.test.autoconfigure.AutoConfigureMybatis;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
-@RunWith(SpringRunner.class)
-@WebMvcTest(ApiController.class)
-@AutoConfigureTestDatabase
-@WebAppConfiguration
-@AutoConfigureMybatis
+@ExtendWith(SpringExtension.class)
+@SpringBootTest
 public class ApiControllerTest {
 
     @Autowired
@@ -41,20 +37,21 @@ public class ApiControllerTest {
     @MockBean
     private ApiClient apiClient;
 
-    @Before
-    public void before() {
+    @BeforeEach
+    public void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(ctx).build();
-        given(this.appService.getSecret("111111"))
-                .willReturn("1111111");
+        given(this.appService.getSecret(any()))
+                .willReturn("11111111");
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("appSecret", "1111111");
-        given(this.apiClient.secret("111111"))
+        given(this.apiClient.secret(any()))
                 .willReturn(ApiResult.ok(jsonObject));
     }
 
     @Test
     public void testIndex() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/index"))
+                .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
@@ -66,11 +63,11 @@ public class ApiControllerTest {
 
     @Test
     public void testOpen() {
-        Assert.assertTrue(true);
+        assertTrue(true);
     }
 
     @Test
     public void testSecret() {
-        Assert.assertTrue(true);
+        assertTrue(true);
     }
 }

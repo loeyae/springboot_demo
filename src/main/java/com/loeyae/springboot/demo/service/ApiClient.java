@@ -1,15 +1,7 @@
 package com.loeyae.springboot.demo.service;
 
-import com.alibaba.fastjson.JSONObject;
 import com.loeyae.springboot.demo.api.ApiApi;
-import com.loeyae.springboot.demo.common.ApiResult;
-import org.bouncycastle.cert.ocsp.Req;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * api feign client.

@@ -19,6 +19,12 @@ app:
 spring:
   application:
     name: andyzh
+#  data:
+#    elasticsearch:
+#      repositories:
+#        enabled: true
+#      cluster-name: elasticsearch-cluster
+#      cluster-nodes: 192.168.7.231:9300
   #thymeleaf start
   thymeleaf:
     mode: HTML
@@ -71,3 +77,5 @@ logging:
       web: WARN
       root: WARN
     path: /var/log
+elasticsearch:
+  cluster-nodes: 192.168.7.231:9200, 192.168.7.231:9201, 192.168.7.231:9202
