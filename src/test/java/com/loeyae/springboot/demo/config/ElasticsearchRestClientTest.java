@@ -35,6 +35,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -227,6 +228,11 @@ class ElasticsearchRestClientTest {
         }
         assertNotNull(searchResponse);
         assertTrue(RestStatus.OK == searchResponse.status());
+        List<Map<String, Object>> result = new ArrayList<>();
+        searchResponse.getHits().iterator().forEachRemaining(item -> {
+            result.add(item.getSourceAsMap());
+        });
+        assertTrue(result.size() > 0);
         SearchScrollRequest scrollRequest = new SearchScrollRequest();
         scrollRequest.scrollId(searchResponse.getScrollId());
         SearchResponse searchResponse1 = null;
