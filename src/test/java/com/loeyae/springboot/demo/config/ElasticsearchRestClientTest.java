@@ -5,6 +5,8 @@ import org.elasticsearch.action.DocWriteResponse;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
+import org.elasticsearch.action.bulk.BulkRequest;
+import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.get.GetRequest;
@@ -34,11 +36,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -65,12 +65,34 @@ class ElasticsearchRestClientTest {
                 {
                     builder.startObject("properties");
                     {
+                        builder.startObject("id");
+                        {
+                            builder.field("type", "long");
+                        }
+                        builder.endObject();
+                        builder.startObject("count");
+                        {
+                            builder.field("type", "integer");
+                        }
+                        builder.endObject();
+                        builder.startObject("price");
+                        {
+                            builder.field("type", "float");
+                        }
+                        builder.endObject();
+                        builder.startObject("amount");
+                        {
+                            builder.field("type", "float");
+                        }
+                        builder.endObject();
                         builder.startObject("message");
                         {
                             builder.field("type", "text");
+                            builder.field("analyzer", "chinese");
+//                            builder.field("search_analyzer", "ik_smart");
                         }
                         builder.endObject();
-                        builder.startObject("id");
+                        builder.startObject("created");
                         {
                             builder.field("type", "long");
                         }
@@ -94,6 +116,7 @@ class ElasticsearchRestClientTest {
             acknowledged = createIndexdResponse.isAcknowledged();
             shardsAcknowledged = createIndexdResponse.isShardsAcknowledged();
         } catch (ElasticsearchException exc) {
+            exc.printStackTrace();
             restStatus = exc.status();
         } catch (IOException e) {
             e.printStackTrace();
@@ -101,6 +124,48 @@ class ElasticsearchRestClientTest {
         assertTrue(acknowledged);
         assertTrue(shardsAcknowledged);
         assertNull(restStatus);
+    }
+
+    @Test
+    void testBulkInsert() {
+        boolean ret = false;
+        List<String> messages = Arrays.asList(new String[]{
+                "这是测试数据", "测试es搜索", "es搜索数据", "备注消息", "全文检索示范", "搜索示例",
+                "中文检索示例", "中文检索测试", "es中文检索", "es中文全文检索"
+        });
+        for (int i = 8656; i < 100000; i++) {
+            BulkRequest bulkRequest = new BulkRequest();
+            for (int j = 0; j < 10; j++) {
+                Map<String, Object> map = new HashMap<>();
+                Random random = new Random();
+                NumberFormat nf = NumberFormat.getNumberInstance(Locale.CHINA);
+                nf.setMaximumFractionDigits(2);
+                Integer c = random.nextInt(1000) + 1;
+                BigDecimal p =
+                        BigDecimal.valueOf(Double.valueOf(nf.format(random.nextFloat() * 100)));
+                BigDecimal a = p.multiply(BigDecimal.valueOf(c));
+                map.put("id", i * 10 + j + 1);
+                map.put("count", c);
+                map.put("price", p);
+                map.put("amount", a);
+                map.put("message", messages.get(new Random().nextInt(messages.size())));
+                map.put("created", new Date().getTime());
+                bulkRequest.add(new IndexRequest("zy-sample", "_doc"){{
+                    source(map);
+                }});
+            }
+            BulkResponse bulkResponse = null;
+            try {
+                bulkResponse = highLevelClient.bulk(bulkRequest, RequestOptions.DEFAULT);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            System.out.println(bulkResponse.status());
+            if (RestStatus.OK == bulkResponse.status()) {
+                ret = true;
+            }
+        }
+        assertTrue(ret);
     }
 
     @Test
