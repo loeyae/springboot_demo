@@ -18,7 +18,7 @@ app:
   dest: ${APP_DEST:test}
 spring:
   application:
-    name: andyzh
+    name: andyzh-demo
 #  data:
 #    elasticsearch:
 #      repositories:
@@ -64,13 +64,21 @@ spring:
     password: ${REDIS_PSWD:0f87990482b26838c1c2702cb1145007}
     #默认使用db2
     database: ${REDIS_DB_NO:1}
-
 # Mybatis-Plus Config
 mybatis-plus:
   # 扫描 mapper.xml
   mapper-locations: classpath:/mapper/*Mapper.xml
   # 枚举类扫描
   typeEnumsPackage: com.loeyae.springboot.demo.*.enums
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${EUREKA_USER:admin}:${EUREKA_PASSWORD:ad2020min}@${EUREKA_HOST:192.168.1.220}:${EUREKA_PORT:9900}/eureka/
+  instance:
+    leaseRenewalIntervalInSeconds: 10
+    metadataMap:
+      instanceId: ${vcap.application.instance_id:${spring.application.name}:${spring.application.instance_id:${server.port}}}
 
 logging:
     level:
