@@ -1,3 +1,5 @@
+
+debug: false
 eureka:
   client:
     serviceUrl:
@@ -14,3 +16,8 @@ eureka:
 
     hostname: ${spring.cloud.client.ip-address}
     instance-id: demo(${spring.cloud.client.ip-address}:${server.port})
+
+service:
+  demo:
+    name: andyzh-demo
+    url:

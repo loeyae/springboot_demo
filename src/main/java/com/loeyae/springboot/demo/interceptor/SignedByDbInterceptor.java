@@ -30,7 +30,7 @@ import java.util.List;
 public class SignedByDbInterceptor extends SignedBaseInterceptor implements HandlerInterceptor {
 
     public static final String VERIFY_FAIL_MSG = "The request parameter signature verification failed!";
-    private List<String> signParams = new ArrayList<>(Arrays.asList("appId", "ts"));
+    private List<String> signParams = new ArrayList<>(Arrays.asList(STR_BYS_APP_ID, STR_BYS_TIMESTAMP));
 
     @Autowired
     private AppService appService;

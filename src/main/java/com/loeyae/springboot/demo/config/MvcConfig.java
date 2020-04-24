@@ -41,6 +41,7 @@ public class MvcConfig implements WebMvcConfigurer {
      */
     @Bean
     public Encoder feignEncoder() {
+
         return new SpringEncoder(feignHttpMessageConverter());
     }
 

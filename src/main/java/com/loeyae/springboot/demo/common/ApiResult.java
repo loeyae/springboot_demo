@@ -34,7 +34,7 @@ public class ApiResult<T> implements Serializable {
     /**
      * 数据
      */
-    private transient T data;
+    private T data;
 
     public ApiResult(IErrorCode errorCode) {
         errorCode = Optional.ofNullable(errorCode).orElse(BaseErrorCode.FAILED);

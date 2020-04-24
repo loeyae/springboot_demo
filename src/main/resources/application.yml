@@ -39,7 +39,7 @@ spring:
   devtools:
     restart:
         enabled: true
-    add-properties: true
+    add-properties: false
 
   # DataSource StoreConfig
   datasource:
