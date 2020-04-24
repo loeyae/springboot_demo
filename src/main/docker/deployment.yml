@@ -26,14 +26,15 @@ spec:
       containers:
         - name: demo
           image: springboot_demo:latest
-          #command: ["/bin/sh","-c","java -Xmx800m -Xms800m -Xmn300m -Djava.security.egd=file:/dev/./urandom -jar
-          #/app.jar --spring.profiles.active=$ENV"]
-          command: ["/bin/sh","-c","java -Xmx800m -Xms800m -Xmn300m -Djava.security.egd=file:/dev/./urandom -jar /app.jar"]
+          command: ["/bin/sh","-c","java -Xmx800m -Xms800m -Xmn300m -Djava.security.egd=file:/dev/./urandom -jar /app.jar --spring.profiles.active=$ENV"]
+          #command: ["/bin/sh","-c","java -Xmx800m -Xms800m -Xmn300m -Djava.security.egd=file:/dev/./urandom -jar /app.jar"]
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8081
               name: port-8081
-
+          env:
+            - name: ENV
+              value: test
 ---
 apiVersion: v1
 kind: Service

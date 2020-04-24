@@ -16,7 +16,10 @@ app:
   id: 10000002
   secret: wFIg86dd6fCMrQawfstSgP1j7tzupDy6
   dest: ${APP_DEST:test}
+
 spring:
+  profiles:
+    active: local
   application:
     name: andyzh-demo
 #  data:
@@ -71,15 +74,6 @@ mybatis-plus:
   # 枚举类扫描
   typeEnumsPackage: com.loeyae.springboot.demo.*.enums
 
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://${EUREKA_USER:admin}:${EUREKA_PASSWORD:ad2020min}@${EUREKA_HOST:192.168.1.220}:${EUREKA_PORT:9900}/eureka/
-  instance:
-    leaseRenewalIntervalInSeconds: 10
-    metadataMap:
-      instanceId: ${vcap.application.instance_id:${spring.application.name}:${spring.application.instance_id:${server.port}}}
-
 logging:
     level:
       web: WARN
@@ -87,3 +81,11 @@ logging:
     path: /var/log
 elasticsearch:
   cluster-nodes: 192.168.7.231:9200, 192.168.7.231:9201, 192.168.7.231:9202
+management:
+  health:
+    mail:
+      enabled: false
+    elasticsearch:
+      enabled: false
+    db:
+      enabled: false
