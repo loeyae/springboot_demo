@@ -18,7 +18,7 @@ import java.util.List;
  * @version: 1.0
  * @author: zhangyi07@beyondsoft.com
  */
-@Configuration
+//@Configuration
 public class IntercepterConfig implements WebMvcConfigurer {
 
     @Override
