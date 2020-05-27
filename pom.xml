@@ -255,6 +255,8 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <serverId>bys-hub</serverId>
+                    <registryUrl>harbor-harbor-portal.harbor</registryUrl>
                     <imageName>${project.build.finalName}</imageName>
                     <dockerDirectory>${project.basedir}/src/main/docker</dockerDirectory>
                     <resources>
