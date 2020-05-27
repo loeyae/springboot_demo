@@ -82,7 +82,7 @@ node {
     stage("Package") {
         if ((PACKAGE_BY_STABLE && currentBuild.resultIsBetterOrEqualTo("SUCCESS")) ||
                 !PACKAGE_BY_STABLE) {
-            withCredentials([dockerCert(credentialsId: 'docker-local', variable: 'DOCKER_CERT_PATH')]) {
+            withCredentials([dockerCert(credentialsId: 'docker-client', variable: 'DOCKER_CERT_PATH')]) {
                 sh "mvn -f pom.xml clean package -Dautoconfig.skip=true -Dmaven.test.skip=true"
             }
 
