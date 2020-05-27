@@ -1,0 +1,55 @@
+
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: my-app
+
+---
+
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: demo
+  namespace: my-app
+  labels:
+    app: demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo
+  template:
+    metadata:
+      labels:
+        app: demo
+    spec:
+      containers:
+        - name: demo
+          image: springboot_demo:latest
+          command: ["/bin/sh","-c","java -Xmx800m -Xms800m -Xmn300m -Djava.security.egd=file:/dev/./urandom -jar /app.jar --spring.profiles.active=$ENV"]
+          #command: ["/bin/sh","-c","java -Xmx800m -Xms800m -Xmn300m -Djava.security.egd=file:/dev/./urandom -jar /app.jar"]
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8081
+              name: port-8081
+          env:
+            - name: ENV
+              value: test
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: demo
+  name: demo
+  namespace: my-app
+spec:
+  ports:
+    - port: 8081
+      name: port-8081
+      protocol: TCP
+      targetPort: 8081
+  selector:
+    app: demo
+  externalIPs:
+    - 192.168.1.220

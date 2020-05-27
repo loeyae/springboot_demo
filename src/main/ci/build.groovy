@@ -14,15 +14,15 @@ node {
     def minimumInstructionCoverage = params.minimumInstructionCoverage ? params.minimumInstructionCoverage : '30'
     stage("Checkout") {
         checkout(
-                [
-                        $class                           : 'GitSCM',
-                        branches                         : [[name: '*/master']],
-                        browser                          : [$class: 'GithubWeb', repoUrl: 'https://github.com/loeyae/springboot_demo'],
-                        doGenerateSubmoduleConfigurations: false,
-                        extensions                       : [],
-                        submoduleCfg                     : [],
-                        userRemoteConfigs                : [[credentialsId: 'github', url: 'git@github.com:loeyae/springboot_demo.git']]
+            [
+                $class: 'GitSCM', branches: [[name: '*/master']], 
+                doGenerateSubmoduleConfigurations: false, 
+                extensions: [], 
+                submoduleCfg: [], 
+                userRemoteConfigs: [
+                    [credentialsId: 'github-secret', url: 'https://github.com/loeyae/springboot_demo.git']
                 ]
+            ]
         )
     }
 //    stage("code analysis") {

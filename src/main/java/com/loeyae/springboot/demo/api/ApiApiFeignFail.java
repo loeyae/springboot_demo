@@ -1,5 +1,6 @@
 package com.loeyae.springboot.demo.api;
 
+import com.alibaba.fastjson.JSONObject;
 import com.loeyae.springboot.demo.common.ApiResult;
 import com.loeyae.springboot.demo.entity.Demo;
 
@@ -30,5 +31,10 @@ public class ApiApiFeignFail implements ApiApi {
     @Override
     public ApiResult secret(String appId) {
         return ApiResult.feignFail();
+    }
+
+    @Override
+    public JSONObject test() {
+        return null;
     }
 }

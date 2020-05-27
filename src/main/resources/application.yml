@@ -16,9 +16,12 @@ app:
   id: 10000002
   secret: wFIg86dd6fCMrQawfstSgP1j7tzupDy6
   dest: ${APP_DEST:test}
+
 spring:
+  profiles:
+    active: local
   application:
-    name: andyzh
+    name: andyzh-demo
 #  data:
 #    elasticsearch:
 #      repositories:
@@ -36,7 +39,7 @@ spring:
   devtools:
     restart:
         enabled: true
-    add-properties: true
+    add-properties: false
 
   # DataSource StoreConfig
   datasource:
@@ -64,7 +67,6 @@ spring:
     password: ${REDIS_PSWD:0f87990482b26838c1c2702cb1145007}
     #默认使用db2
     database: ${REDIS_DB_NO:1}
-
 # Mybatis-Plus Config
 mybatis-plus:
   # 扫描 mapper.xml
@@ -79,3 +81,11 @@ logging:
     path: /var/log
 elasticsearch:
   cluster-nodes: 192.168.7.231:9200, 192.168.7.231:9201, 192.168.7.231:9202
+management:
+  health:
+    mail:
+      enabled: false
+    elasticsearch:
+      enabled: false
+    db:
+      enabled: false

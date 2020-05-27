@@ -43,7 +43,7 @@ public class ApiController implements ApiApi {
     }
 
     @Override
-    public ApiResult open(@RequestParam(name = "id", required = false) Integer id) {
+    public ApiResult<JSONObject> open(@RequestParam(name = "id", required = false) Integer id) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("data","open");
         return ApiResult.ok(jsonObject);
@@ -57,5 +57,12 @@ public class ApiController implements ApiApi {
             return ApiResult.ok(param);
         }
         return ApiResult.failed("app no exists");
+    }
+
+    @Override
+    public JSONObject test() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("test", "test");
+        return jsonObject;
     }
 }

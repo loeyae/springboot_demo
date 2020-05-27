@@ -1,8 +1,13 @@
 package com.loeyae.springboot.demo;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 
@@ -11,6 +16,7 @@ import org.springframework.context.annotation.Bean;
 //没有连接数据库的时候报错  需要加上这一句
 //@EnableAutoConfiguration(exclude={DataSourceAutoConfiguration.class})
 //@MapperScan(basePackages = {"com.loeyae.springboot.demo.mapper"})
+@EnableEurekaClient
 public class DemoApplication {
 
 

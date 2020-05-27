@@ -1,0 +1,21 @@
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${EUREKA_USER:admin}:${EUREKA_PASSWORD:ad2020min}@${EUREKA_SERVICE_HOST:192.168.1.220}:${EUREKA_SERVICE_PORT:9900}/eureka/
+    registry-fetch-interval-seconds: 10
+    initial-instance-info-replication-interval-seconds: 10
+    instance-info-replication-interval-seconds: 10
+    healthcheck:
+      enabled: true
+  instance:
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 30
+    prefer-ip-address: true
+
+    hostname: ${spring.cloud.client.ip-address}
+    instance-id: demo(${spring.cloud.client.ip-address}:${server.port})
+
+service:
+  demo:
+    name: andyzh-demo
+    url:

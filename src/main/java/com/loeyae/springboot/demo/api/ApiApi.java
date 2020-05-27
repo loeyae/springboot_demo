@@ -1,5 +1,6 @@
 package com.loeyae.springboot.demo.api;
 
+import com.alibaba.fastjson.JSONObject;
 import com.loeyae.springboot.demo.common.ApiResult;
 import com.loeyae.springboot.demo.entity.Demo;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,8 +24,11 @@ public interface ApiApi {
     ApiResult post(@RequestBody Demo demo);
 
     @GetMapping(value = "/api/open/index")
-    ApiResult open(@RequestParam(name = "id", required = false) Integer id);
+    ApiResult<JSONObject> open(@RequestParam(name = "id", required = false) Integer id);
 
     @GetMapping(value = "/api/app/secret")
     ApiResult secret(@RequestParam(name = "appId") String appId);
+
+    @GetMapping(value = "/api/open/test")
+    JSONObject test();
 }
