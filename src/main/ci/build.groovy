@@ -14,15 +14,15 @@ node {
     def minimumInstructionCoverage = params.minimumInstructionCoverage ? params.minimumInstructionCoverage : '30'
     stage("Checkout") {
         checkout(
-            [
-                $class: 'GitSCM', branches: [[name: '*/master']], 
-                doGenerateSubmoduleConfigurations: false, 
-                extensions: [], 
-                submoduleCfg: [], 
-                userRemoteConfigs: [
-                    [credentialsId: 'github-secret', url: 'https://github.com/loeyae/springboot_demo.git']
+                [
+                        $class                           : 'GitSCM',
+                        branches                         : [[name: '*/master']],
+                        browser                          : [$class: 'GithubWeb', repoUrl: 'https://github.com/loeyae/springboot_demo'],
+                        doGenerateSubmoduleConfigurations: false,
+                        extensions                       : [],
+                        submoduleCfg                     : [],
+                        userRemoteConfigs                : [[credentialsId: 'github', url: 'https://github.com/loeyae/springboot_demo.git']]
                 ]
-            ]
         )
     }
 //    stage("code analysis") {
@@ -36,7 +36,7 @@ node {
 //            sh "mvn org.jacoco:jacoco-maven-plugin:prepare-agent -f pom.xml clean test -Dautoconfig" +
 //                    ".skip=true -Dmaven.test.skip=false -Dmaven.test.failure.ignore=true sonar:sonar"
             //配置jacoco到pom.xml
-            sh "mvn -f pom.xml clean test -Dautoconfig.skip=true -Dmaven.test.failure.ignore=true sonar:sonar"
+            sh "mvn -f pom.xml clean test -Dautoconfig.skip=true -Dmaven.test.failure.ignore=true sonar:sonar -Dsonar.projectKey=springboot_demo"
             junit healthScaleFactor: 10.0, testResults: '**/target/surefire-reports/*.xml'
             //整合覆盖率到jenkins
             publishCoverage ([
@@ -81,7 +81,7 @@ node {
     }
     stage("Package") {
         if ((PACKAGE_BY_STABLE && currentBuild.resultIsBetterOrEqualTo("SUCCESS")) ||
-                (!PACKAGE_BY_STABLE && currentBuild.resultIsBetterOrEqualTo("UNSTABLE"))) {
+                !PACKAGE_BY_STABLE) {
             withCredentials([dockerCert(credentialsId: 'docker-local', variable: 'DOCKER_CERT_PATH')]) {
                 sh "mvn -f pom.xml clean package -Dautoconfig.skip=true -Dmaven.test.skip=true"
             }
@@ -94,7 +94,7 @@ node {
         def imageTag = "loeyae/springboot_demo:${env.BUILD_NUMBER}"
         def latestTag = "loeyae/springboot_demo:latest"
         if ((PACKAGE_BY_STABLE && currentBuild.resultIsBetterOrEqualTo("SUCCESS")) ||
-                (!PACKAGE_BY_STABLE && currentBuild.resultIsBetterOrEqualTo("UNSTABLE"))) {
+                !PACKAGE_BY_STABLE) {
             withCredentials([dockerCert(credentialsId: 'docker-local', variable: 'DOCKER_CERT_PATH')]) {
                 try {
                     sh """
