@@ -95,7 +95,7 @@ node {
         def latestTag = "loeyae/springboot_demo:latest"
         if ((PACKAGE_BY_STABLE && currentBuild.resultIsBetterOrEqualTo("SUCCESS")) ||
                 !PACKAGE_BY_STABLE) {
-            withCredentials([dockerCert(credentialsId: 'docker-local', variable: 'DOCKER_CERT_PATH')]) {
+            withCredentials([dockerCert(credentialsId: 'docker-client', variable: 'DOCKER_CERT_PATH')]) {
                 try {
                     sh """
                   docker tag springboot_demo:latest $imageTag
