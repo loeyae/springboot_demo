@@ -79,6 +79,7 @@ logging:
       web: WARN
       root: WARN
     path: /var/log
+    file: andyzh.log
 elasticsearch:
   cluster-nodes: 192.168.7.231:9200, 192.168.7.231:9201, 192.168.7.231:9202
 management:

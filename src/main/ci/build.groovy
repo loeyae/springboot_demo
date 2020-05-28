@@ -97,18 +97,19 @@ node {
                 !PACKAGE_BY_STABLE) {
             withDockerServer([credentialsId: 'docker-client', uri: 'https://192.168.163.70:2375']) {
                 try {
-                  docker tag 'springboot_demo:latest' $imageTag
-                  docker tag 'springboot_demo:latest' $latestTag
-                  docker push $imageTag
-                  docker push $latestTag
+                  sh """
+                    docker info
+                    """
                 }
                 catch (exc) {
                     println("Push image failure")
                     print(exc.getMessage())
                     currentBuild.result = 'FAILURE'
                 }
+                sh """
                 docker rmi $imageTag
                 docker rmi $latestTag
+                """
             }
 //            withCredentials([dockerCert(credentialsId: 'docker-client', variable: 'DOCKER_CERT_PATH')]) {
 //                try {
