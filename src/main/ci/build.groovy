@@ -95,7 +95,7 @@ node {
         def latestTag = "hub.bys.cd/loeyae/springboot_demo:latest"
         if ((PACKAGE_BY_STABLE && currentBuild.resultIsBetterOrEqualTo("SUCCESS")) ||
                 !PACKAGE_BY_STABLE) {
-            withDockerServer([credentialsId: 'docker-client', uri: 'https://192.168.163.70:2375']) {
+            withDockerServer([credentialsId: 'docker-client', uri: 'https://192.168.163.90:2375']) {
                 try {
                   sh """
                     docker info
