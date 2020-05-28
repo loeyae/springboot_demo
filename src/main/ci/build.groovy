@@ -95,11 +95,14 @@ node {
         def latestTag = "hub.bys.cd/loeyae/springboot_demo:latest"
         if ((PACKAGE_BY_STABLE && currentBuild.resultIsBetterOrEqualTo("SUCCESS")) ||
                 !PACKAGE_BY_STABLE) {
-            withDockerServer([credentialsId: 'docker-client', uri: 'https://192.168.163.90:2375']) {
+            withCredentials([dockerCert(credentialsId: 'docker-client', variable: 'DOCKER_CERT_PATH')]) {
                 try {
-                  sh """
-                    docker info
-                    """
+                    sh """
+                  docker tag springboot_demo:latest $imageTag
+                  docker tag springboot_demo:latest $latestTag
+                  docker push $imageTag
+                  docker push $latestTag
+                  """
                 }
                 catch (exc) {
                     println("Push image failure")
@@ -111,25 +114,6 @@ node {
                 docker rmi $latestTag
                 """
             }
-//            withCredentials([dockerCert(credentialsId: 'docker-client', variable: 'DOCKER_CERT_PATH')]) {
-//                try {
-//                    sh """
-//                  docker tag springboot_demo:latest $imageTag
-//                  docker tag springboot_demo:latest $latestTag
-//                  docker push $imageTag
-//                  docker push $latestTag
-//                  """
-//                }
-//                catch (exc) {
-//                    println("Push image failure")
-//                    print(exc.getMessage())
-//                    currentBuild.result = 'FAILURE'
-//                }
-//                sh """
-//                docker rmi $imageTag
-//                docker rmi $latestTag
-//                """
-//            }
         } else {
             echo "Task FAILURE, Skip image push"
         }
