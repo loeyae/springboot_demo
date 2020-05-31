@@ -14,7 +14,7 @@ node {
                         doGenerateSubmoduleConfigurations: false,
                         extensions                       : [],
                         submoduleCfg                     : [],
-                        userRemoteConfigs                : [[credentialsId: 'github', url: 'git@github.com:loeyae/springboot_demo.git']]
+                        userRemoteConfigs                : [[credentialsId: 'github', url: 'https://github.com/loeyae/springboot_demo.git']]
                 ]
         )
     }
