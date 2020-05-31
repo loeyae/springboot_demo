@@ -46,6 +46,8 @@ spec:
                 configMapKeyRef:
                   name: my-demo-dev-config
                   key: app.dest
+      imagePullSecrets:
+          - name: regsecret
 
 ---
 kind: Service
