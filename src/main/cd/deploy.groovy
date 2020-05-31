@@ -19,6 +19,8 @@ node {
         )
     }
     stage("deploy") {
-        sh "kubectl apply -f src/main/cd/deploy-${params.ENV_LABEL}.yml"
+        withDockerRegistry(credentialsId: 'hub.bys', url: 'https://hub.bys.cd') {
+            sh "kubectl apply -f src/main/cd/deploy-${params.ENV_LABEL}.yml"
+        }
     }
 }
