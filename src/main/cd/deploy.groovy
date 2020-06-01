@@ -42,12 +42,8 @@ node {
                 sh """
                   docker pull $latestTag
                   docker tag $latestTag $imageTag
+                  docker push $imageTag  
                   """
-                if (params.PUSH_TAGED_IMAGE) {
-                    sh """
-                    docker push $imageTag
-                    """
-                }
             }
             catch (exc) {
                 println("pull image failure")
@@ -56,6 +52,7 @@ node {
             }
             try {
                 sh """
+                docker rmi $imageTag
                 docker rmi $latestTag
                 """
             } catch (exc) {
