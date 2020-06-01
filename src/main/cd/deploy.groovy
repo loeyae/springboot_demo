@@ -20,8 +20,8 @@ node {
     }
     stage("deploy") {
         def buildId = currentBuild.previousBuiltBuild.id
-        println("previousBuiltBuild id: $buildId")
-        sh"env TAG=${buildId}"
-        sh "kubectl apply -f src/main/cd/deploy-${params.ENV_LABEL}.yml"
+        def source = "src/main/cd/deploy-${params.ENV_LABEL}.yml"
+        sh"sed -e 's#{TAG}#${buildId}#g' ${source} > deployment.yml"
+        sh "kubectl apply -f deployment.yml"
     }
 }
