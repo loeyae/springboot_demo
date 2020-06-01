@@ -20,7 +20,7 @@ node {
     }
     stage("deploy") {
         def buildId = currentBuild.previousBuiltBuild.id
-        println($buildId)
+        println("previousBuiltBuild id: $buildId")
 //        sh "kubectl apply -f src/main/cd/deploy-${params.ENV_LABEL}.yml"
     }
 }
