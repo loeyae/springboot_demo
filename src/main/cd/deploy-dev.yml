@@ -35,7 +35,7 @@ spec:
     spec:
       containers:
         - name: s8t-demo
-          image: hub.bys.cd/loeyae/springboot_demo:latest
+          image: hub.bys.cd/loeyae/springboot_demo:$TAG
           imagePullPolicy: Always
           ports:
             - containerPort: 8081
