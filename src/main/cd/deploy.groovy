@@ -36,7 +36,7 @@ node {
                     """
                 }
                 sh """
-                  docker pull springboot_demo:latest $latestTag
+                  docker pull $latestTag
                   docker tag $latestTag $imageTag
                   """
                 if (params.PUSH_TAGED_IMAGE) {
