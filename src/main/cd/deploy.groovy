@@ -35,6 +35,10 @@ node {
                     docker rmi $prevImageTag
                     """
                 }
+            } catch (exc) {
+                print(exc.getMessage())
+            }
+            try {
                 sh """
                   docker pull $latestTag
                   docker tag $latestTag $imageTag
@@ -50,9 +54,13 @@ node {
                 print(exc.getMessage())
                 currentBuild.result = 'FAILURE'
             }
-            sh """
+            try {
+                sh """
                 docker rmi $latestTag
                 """
+            } catch (exc) {
+                print(exc.getMessage())
+            }
         }
         def source = "src/main/cd/deploy-${params.ENV_LABEL}.yml"
         sh "sed -e 's#{TAG}#${buildId}#g' ${source} > deployment.yml"
