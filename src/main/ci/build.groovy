@@ -91,16 +91,13 @@ node {
         }
     }
     stage("Image push") {
-        def imageTag = "hub.bys.cd/loeyae/springboot_demo:${env.BUILD_NUMBER}"
         def latestTag = "hub.bys.cd/loeyae/springboot_demo:latest"
         if ((PACKAGE_BY_STABLE && currentBuild.resultIsBetterOrEqualTo("SUCCESS")) ||
                 !PACKAGE_BY_STABLE) {
             withCredentials([dockerCert(credentialsId: 'docker-client', variable: 'DOCKER_CERT_PATH')]) {
                 try {
                     sh """
-                  docker tag springboot_demo:latest $imageTag
                   docker tag springboot_demo:latest $latestTag
-                  docker push $imageTag
                   docker push $latestTag
                   """
                 }
@@ -110,7 +107,6 @@ node {
                     currentBuild.result = 'FAILURE'
                 }
                 sh """
-                docker rmi $imageTag
                 docker rmi $latestTag
                 """
             }
