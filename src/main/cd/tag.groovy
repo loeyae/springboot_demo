@@ -7,7 +7,7 @@ node {
     ])
     stage("tag image") {
         def imageTag = "loeyae/springboot_demo:${params.imageTagPostfix}"
-        withCredentials([dockerCert(credentialsId: 'docker-local', variable: 'DOCKER_CERT_PATH')]) {
+        withCredentials([dockerCert(credentialsId: 'docker-client', variable: 'DOCKER_CERT_PATH')]) {
             try {
                 sh """
                   docker tag springboot_demo:latest $imageTag
